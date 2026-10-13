@@ -19,41 +19,43 @@ This is a complete full-stack web application built to help Indian citizens disc
 
 ---
 
-## Local Setup Instructions
+## 🚀 Quick Start (Single Command)
+
+To run the complete application (Backend + SQLite Database + Frontend + Automatic Browser Launch), run **one command**:
+
+```bash
+npm start
+```
+
+That's it! 
+- ✅ Express backend starts on `http://localhost:5001`
+- ✅ SQLite database (`scheme_portal.db`) connects and auto-seeds
+- ✅ Vite frontend starts on `http://localhost:5173`
+- 🌐 Your default browser automatically opens `http://localhost:5173`!
+
+*(Alternative: You can also double-click `start.bat` or run `npm run dev`)*
+
+---
+
+## Manual Step-by-Step Setup (Optional)
 
 Prerequisites: You must have **Node.js** installed on your system.
 
 ### 1. Backend Setup
-
-1.  Open your terminal and navigate to the `backend` folder:
-    \`\`\`bash
-    cd backend
-    \`\`\`
-2.  Install dependencies:
-    \`\`\`bash
-    npm install
-    \`\`\`
-3.  Start the backend server:
-    \`\`\`bash
-    npm start
-    \`\`\`
-    > The backend will run on \`http://localhost:5000\`. On the first run, the SQLite database `scheme_portal.db` will be auto-generated and seeded with 10 actual Central & Tamil Nadu schemes and the default admin user.
+```bash
+cd backend
+npm install
+npm start
+```
+> The backend runs on `http://localhost:5001`. SQLite database `scheme_portal.db` connects automatically.
 
 ### 2. Frontend Setup
-
-1.  Open a new terminal window and navigate to the `frontend` folder:
-    \`\`\`bash
-    cd frontend
-    \`\`\`
-2.  Install dependencies:
-    \`\`\`bash
-    npm install
-    \`\`\`
-3.  Start the Vite development server:
-    \`\`\`bash
-    npm run dev
-    \`\`\`
-    > This will output a local URL (e.g., \`http://localhost:5173\`). Open this URL in your browser.
+```bash
+cd frontend
+npm install
+npm run dev
+```
+> The frontend dev server runs on `http://localhost:5173` and proxies all `/api` requests to backend port 5001.
 
 ---
 

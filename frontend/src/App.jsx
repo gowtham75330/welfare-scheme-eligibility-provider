@@ -40,8 +40,8 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/learn-more" element={<LearnMore />} />
-            <Route path="/login" element={!user ? <LoginPage setUser={setUser} /> : <Navigate to="/dashboard" />} />
-            <Route path="/register" element={!user ? <RegisterPage setUser={setUser} /> : <Navigate to="/dashboard" />} />
+            <Route path="/login" element={!user ? <LoginPage setUser={setUser} /> : <Navigate to="/profile" />} />
+            <Route path="/register" element={!user ? <RegisterPage setUser={setUser} /> : <Navigate to="/profile" />} />
             
             {/* User Protected Routes */}
             <Route path="/dashboard" element={user ? <Dashboard user={user} /> : <Navigate to="/login" />} />

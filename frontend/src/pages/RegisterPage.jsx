@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserPlus, Mail, Lock, User } from 'lucide-react';
 
@@ -8,6 +8,14 @@ export default function RegisterPage({ setUser }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  // Ensure fields are completely blank on mount
+  useEffect(() => {
+    setName('');
+    setEmail('');
+    setPassword('');
+    setError('');
+  }, []);
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -47,7 +55,7 @@ export default function RegisterPage({ setUser }) {
           </p>
         </div>
         
-        <form className="mt-8 space-y-6" onSubmit={handleRegister}>
+        <form className="mt-8 space-y-6" onSubmit={handleRegister} autoComplete="off">
           {error && <div className="text-red-500 text-sm text-center bg-red-50 p-3 rounded">{error}</div>}
           <div className="space-y-4 rounded-md shadow-sm">
             <div>
@@ -60,9 +68,12 @@ export default function RegisterPage({ setUser }) {
                 </div>
                 <input
                   type="text"
+                  name="portal_reg_fullname"
+                  id="portal_reg_fullname"
+                  autoComplete="off"
                   required
                   className="input-field pl-10 block w-full sm:text-sm"
-                  placeholder="Ram Kumar"
+                  placeholder="Enter your full name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
@@ -78,9 +89,12 @@ export default function RegisterPage({ setUser }) {
                 </div>
                 <input
                   type="email"
+                  name="portal_reg_email"
+                  id="portal_reg_email"
+                  autoComplete="off"
                   required
                   className="input-field pl-10 block w-full sm:text-sm"
-                  placeholder="ram@example.com"
+                  placeholder="Enter your email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -96,9 +110,12 @@ export default function RegisterPage({ setUser }) {
                 </div>
                 <input
                   type="password"
+                  name="portal_reg_password"
+                  id="portal_reg_password"
+                  autoComplete="new-password"
                   required
                   className="input-field pl-10 block w-full sm:text-sm"
-                  placeholder="••••••••"
+                  placeholder="Create a secure password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />

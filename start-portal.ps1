@@ -1,7 +1,7 @@
 Write-Host "Starting Scholarship Portal Services..." -ForegroundColor Cyan
 
 # Start the Backend
-Write-Host "--> Starting Node.js Backend Server on port 5000..." -ForegroundColor Green
+Write-Host "--> Starting Node.js Backend Server on port 5001..." -ForegroundColor Green
 Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd backend; npm start" -WindowStyle Normal
 
 # Start the Frontend

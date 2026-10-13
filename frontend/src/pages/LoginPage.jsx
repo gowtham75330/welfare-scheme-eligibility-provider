@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Lock, Mail } from 'lucide-react';
 
@@ -8,6 +8,20 @@ export default function LoginPage({ setUser }) {
   const [error, setError] = useState('');
   const [isAdminLogin, setIsAdminLogin] = useState(false);
   const navigate = useNavigate();
+
+  // Ensure fields are completely blank on mount or when switching between User and Admin
+  useEffect(() => {
+    setEmail('');
+    setPassword('');
+    setError('');
+  }, [isAdminLogin]);
+
+  const handleToggleLoginType = () => {
+    setIsAdminLogin(!isAdminLogin);
+    setEmail('');
+    setPassword('');
+    setError('');
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -28,7 +42,7 @@ export default function LoginPage({ setUser }) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         setUser(data.user);
-        navigate(isAdminLogin ? '/admin' : '/dashboard');
+        navigate(isAdminLogin ? '/admin' : '/profile');
       } else {
         setError(data.message || 'Login failed');
       }
@@ -50,7 +64,7 @@ export default function LoginPage({ setUser }) {
           </p>
         </div>
         
-        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
+        <form className="mt-8 space-y-6" onSubmit={handleLogin} autoComplete="off">
           {error && <div className="text-red-500 text-sm text-center bg-red-50 p-3 rounded">{error}</div>}
           <div className="space-y-4 rounded-md shadow-sm">
             <div>
@@ -63,9 +77,12 @@ export default function LoginPage({ setUser }) {
                 </div>
                 <input
                   type={isAdminLogin ? "text" : "email"}
+                  name={isAdminLogin ? "portal_admin_user" : "portal_user_email"}
+                  id={isAdminLogin ? "portal_admin_user" : "portal_user_email"}
+                  autoComplete="off"
                   required
                   className="input-field pl-10 block w-full sm:text-sm border-slate-300 rounded-md"
-                  placeholder={isAdminLogin ? "admin" : "you@example.com"}
+                  placeholder={isAdminLogin ? "Enter admin username" : "Enter your email address"}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -81,9 +98,12 @@ export default function LoginPage({ setUser }) {
                 </div>
                 <input
                   type="password"
+                  name="portal_user_pass"
+                  id="portal_user_pass"
+                  autoComplete="new-password"
                   required
                   className="input-field pl-10 block w-full sm:text-sm border-slate-300 rounded-md"
-                  placeholder="••••••••"
+                  placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -102,7 +122,7 @@ export default function LoginPage({ setUser }) {
           <button 
             type="button" 
             className="text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors"
-            onClick={() => setIsAdminLogin(!isAdminLogin)}
+            onClick={handleToggleLoginType}
           >
             {isAdminLogin ? 'Switch to User Login' : 'Admin Login'}
           </button>

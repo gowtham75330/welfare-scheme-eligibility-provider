@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { 
   BuildingLibraryIcon, 
   AcademicCapIcon, 
@@ -10,12 +10,24 @@ import {
   ChevronRightIcon
 } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 export default function HomePage() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [loading, setLoading] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    // Handle ?scrollTo=contact from navbar on other pages
+    const params = new URLSearchParams(location.search);
+    if (params.get('scrollTo') === 'contact') {
+      setTimeout(() => {
+        const el = document.getElementById('contact');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 150);
+    }
+  }, [location.search]);
 
   const handleContactSubmit = async (e) => {
     e.preventDefault();
@@ -63,11 +75,15 @@ export default function HomePage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
               <Link to="/register" className="inline-flex justify-center items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors shadow-sm shadow-blue-600/20">
-                Check Eligibility <ArrowRightIcon className="w-5 h-5" />
+                Check Your Eligibility <ArrowRightIcon className="w-5 h-5" />
               </Link>
-              <Link to="/learn-more" className="inline-flex justify-center items-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-semibold px-8 py-3.5 rounded-xl transition-colors">
-                Learn More
-              </Link>
+              <a
+                href="#contact"
+                onClick={e => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); }}
+                className="inline-flex justify-center items-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-semibold px-8 py-3.5 rounded-xl transition-colors cursor-pointer"
+              >
+                Contact Support
+              </a>
             </div>
           </div>
 
@@ -99,19 +115,26 @@ export default function HomePage() {
             <p className="text-lg text-slate-500">We continuously fetch the latest schemes across various demographics to ensure no one is left behind.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {[
-              { title: 'Students', desc: 'Pre and Post Matric Scholarships, technical education grants.', icon: AcademicCapIcon, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-              { title: 'Women', desc: 'Maternity benefits, marriage assistance, and entrepreneurship support.', icon: UserGroupIcon, color: 'text-pink-600', bg: 'bg-pink-50' },
-              { title: 'Farmers', desc: 'Crop insurance, equipment subsidies, and financial backing.', icon: BuildingLibraryIcon, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-              { title: 'Job Seekers', desc: 'Skill development, unemployment allowances, and training camps.', icon: BriefcaseIcon, color: 'text-orange-600', bg: 'bg-orange-50' },
+              { title: 'Students', desc: 'Pre & Post Matric Scholarships, higher education fee concessions & technical grants.', color: 'text-indigo-600', bg: 'bg-indigo-50' },
+              { title: 'Women', desc: 'Maternity financial assistance, basic income guarantee, and micro-credit.', color: 'text-pink-600', bg: 'bg-pink-50' },
+              { title: 'Disabled', desc: 'Monthly maintenance pensions, assistive aids, ADIP devices, and technical scholarships.', color: 'text-purple-600', bg: 'bg-purple-50' },
+              { title: 'Farmers', desc: 'PM-KISAN ₹6,000/yr support, free agricultural power, KCC crop loans, and security schemes.', color: 'text-emerald-600', bg: 'bg-emerald-50' },
+              { title: 'Unemployed', desc: 'MGNREGA 100-day wage guarantee, unemployment allowances, and PMEGP enterprise subsidies.', color: 'text-amber-600', bg: 'bg-amber-50' },
+              { title: 'Senior Citizens', desc: 'National IGNOAPS & state old age pensions (60+ yrs), PMVVY returns, and free health aids.', color: 'text-orange-600', bg: 'bg-orange-50' },
+              { title: 'Workers', desc: 'e-Shram accidental insurance cover, BOCW welfare, and PM-SYM monthly pensions.', color: 'text-cyan-600', bg: 'bg-cyan-50' },
+              { title: 'Child / Minor', desc: 'Sukanya Samriddhi high-interest fund, CM Girl Child Protection, and Anganwadi nutrition.', color: 'text-rose-600', bg: 'bg-rose-50' },
+              { title: 'Entrepreneurs', desc: 'MUDRA collateral-free loans up to ₹10 Lakh, PM SVANidhi street vendor credit & NEEDS.', color: 'text-blue-600', bg: 'bg-blue-50' },
+              { title: 'Low-Income Families', desc: 'PMGKAY free monthly food rations, Ayushman Bharat ₹5 Lakh health cover & PMAY housing.', color: 'text-teal-600', bg: 'bg-teal-50' },
+              { title: 'Widow / Single Parents', desc: 'Destitute widow monthly pensions, remarriage grants & dependent child educational aid.', color: 'text-violet-600', bg: 'bg-violet-50' },
             ].map((feature, i) => (
-              <div key={i} className="group bg-white rounded-3xl border border-slate-100 p-8 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:border-slate-200 transition-all duration-300">
-                <div className={`w-14 h-14 ${feature.bg} ${feature.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                  <feature.icon className="w-7 h-7" />
+              <div key={i} className="group bg-white rounded-2xl border border-slate-100 p-6 hover:shadow-lg hover:border-slate-200 transition-all duration-200">
+                <div className={`w-10 h-10 ${feature.bg} ${feature.color} rounded-xl flex items-center justify-center mb-4 font-bold text-sm group-hover:scale-105 transition-transform`}>
+                  {i + 1}
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">{feature.title}</h3>
-                <p className="text-slate-500 leading-relaxed">{feature.desc}</p>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">{feature.title}</h3>
+                <p className="text-slate-500 text-xs leading-relaxed">{feature.desc}</p>
               </div>
             ))}
           </div>
@@ -161,7 +184,7 @@ export default function HomePage() {
       </section>
 
       {/* Contact Section */}
-      <section className="py-24 bg-slate-50 px-4 md:px-8">
+      <section id="contact" className="py-24 bg-slate-50 px-4 md:px-8">
         <div className="max-w-3xl mx-auto">
           <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-8 md:p-12">
             <div className="text-center mb-10">
