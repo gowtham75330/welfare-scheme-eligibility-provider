@@ -8,14 +8,21 @@ import { ALL_SCHEMES_DATA } from './schemes_data.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const dbPath = path.join(__dirname, 'scheme_portal.db');
+// Use DB_PATH env var for Render persistent disk, or fall back to local
+const dbPath = process.env.DB_PATH || path.join(__dirname, 'scheme_portal.db');
+
+// Ensure directory exists
+const dbDir = path.dirname(dbPath);
+if (!fs.existsSync(dbDir)) {
+  fs.mkdirSync(dbDir, { recursive: true });
+}
 
 // Create database connection
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     console.error('Error connecting to database:', err.message);
   } else {
-    console.log('Connected to the SQLite database.');
+    console.log(`Connected to SQLite database at: ${dbPath}`);
   }
 });
 

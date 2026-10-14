@@ -8,7 +8,30 @@ import jwt from 'jsonwebtoken';
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// CORS - Allow frontend (Vercel) to talk to backend (Render)
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    // Allow any vercel.app subdomain
+    if (origin.endsWith('.vercel.app') || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(null, true); // Allow all origins for now (restrict later)
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+app.options('*', cors()); // Handle preflight requests
 app.use(express.json());
 
 const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_key_change_me_in_prod';

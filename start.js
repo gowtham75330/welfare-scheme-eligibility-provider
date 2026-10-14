@@ -122,13 +122,27 @@ function openBrowserUrl(targetUrl) {
     clearTimeout(fallbackTimer);
     fallbackTimer = null;
   }
-  console.log(`\n${bold}${green}🌐 Opening application in your default browser: ${targetUrl}${reset}\n`);
+  console.log(`\n${bold}${green}🌐 Opening Scholarship Portal in Google Chrome: ${targetUrl}${reset}\n`);
   if (process.platform === 'win32') {
-    exec(`start ${targetUrl}`);
+    // Explicitly launch Chrome so Edge (system default) is not used.
+    const chromePaths = [
+      'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+      'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+      `${process.env.LOCALAPPDATA}\\Google\\Chrome\\Application\\chrome.exe`,
+    ];
+    // fs is already imported at the top of this file
+    let chromePath = chromePaths.find(p => fs.existsSync(p));
+    if (chromePath) {
+      exec(`"${chromePath}" "${targetUrl}"`);
+    } else {
+      // Chrome not found — fall back to system default browser
+      console.log(`${yellow}⚠️  Chrome not found. Opening in default browser...${reset}`);
+      exec(`start "" "${targetUrl}"`);
+    }
   } else if (process.platform === 'darwin') {
-    exec(`open ${targetUrl}`);
+    exec(`open -a "Google Chrome" "${targetUrl}" || open "${targetUrl}"`);
   } else {
-    exec(`xdg-open ${targetUrl}`);
+    exec(`google-chrome "${targetUrl}" || xdg-open "${targetUrl}"`);
   }
 }
 
